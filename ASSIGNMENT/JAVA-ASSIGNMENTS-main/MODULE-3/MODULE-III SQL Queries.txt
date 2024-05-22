@@ -1,0 +1,115 @@
+> MODULE-III(RDBMS & DATABASE PROGRAMMING WITH JDBC)
+
+i. Select unique job from EMP table
+Ans. SELECT DISTINCT Job FROM emp_table_data
+
+ii. List the details of the emps in asc order of the Dptnos and desc of Jobs?
+Ans. SELECT * FROM emp_table_data ORDER BY Deptno ASC , Job DESC
+
+iii. Display all the unique job groups in the descending order? 
+Ans. SELECT DISTINCT Job FROM emp_table_data ORDER by Job DESC
+
+iv. List the emps who joined before 1981. 
+Ans. SELECT * from emp_table_data WHERE Hiredate<('1981-01-01')
+
+v. List the Empno, Ename, Sal, Daily sal of all emps in the asc order of Annsal.
+Ans. SELECT Empno,Ename,Sal,Sal/30,12*Sal Annsal FROM emp_table_data ORDER BY Annsal ASC
+ 
+vi. List the Empno, Ename, Sal, Exp of all emps working for Mgr 7369. 
+Ans. SELECT Empno, Ename , sal  from emp_table_data where empno='7369'
+
+
+vii. Display all the details of the emps who’s Comm. Is more than their Sal? 
+Ans. SELECT * FROM emp_table_data WHERE Comm>Sal
+
+
+viii. List the emps who are either ‘CLERK’ or ‘ANALYST’ in the Desc order. 
+Ans. SELECT * FROM emp_table_data WHERE Job = 'CLERK' or Job= 'ANALYST' ORDER BY  Job DESC 
+
+
+ix. List the emps Who Annual sal ranging from 22000 and 45000. 
+Ans. SELECT * FROM emp_table_data WHERE Sal*12 BETWEEN 22000 AND 45000
+
+
+x. List the Enames those are starting with ‘S’ and with five characters. 
+Ans. SELECT * FROM emp_table_data WHERE Ename LIKE 'S%' AND length(Ename) = 5
+
+
+xi. List the emps whose Empno not starting with digit78. 
+Ans. SELECT * FROM emp_table_data  WHERE Empno NOT LIKE '78%' 
+
+
+xii. List all the Clerks of Deptno 20. 
+Ans. SELECT * FROM emp_table_data WHERE Job = 'CLERK' AND Deptno = 20
+
+
+xiii. List the Emps who are senior to their own MGRS. 
+Ans. 
+
+xiv. List the Emps of Deptno 20 who’s Jobs are same as Deptno10. 
+
+
+xv. List the Emps who’s Sal is same as FORD or SMITH in desc order of Sal. 
+Ans. Select * from emp_table_data where sal in (select sal from emp_table_data where ( ename = 'SMITH' or ename = 'FORD' )) order by sal desc;
+
+
+xvi. List the emps whose jobs same as SMITH or ALLEN. 
+Ans. Select * from emp_table_data where Job in (SELECT Job FROM emp_table_data WHERE (Ename = 'SMITH' or Ename = 'ALLEN'))
+
+
+xvii. Any jobs of deptno 10 those that are not found in deptno 20.
+Ans. SELECT * FROM emp_table_data WHERE Deptno = 10 and job NOT IN (SELECT job FROM emp_table_data WHERE Deptno = 20 )
+ 
+xviii. Find the highest sal of EMP table. 
+Ans. SELECT MAX(Sal) FROM emp_table_data
+
+
+xix. Find details of highest paid employee. 
+Ans. SELECT * FROM emp_table_data WHERE Sal IN ( SELECT MAX(Sal) FROM emp_table_data )
+
+xx. Find the total sal given to the MGR. 
+Ans. SELECT SUM(Sal) FROM emp_table_data WHERE Job = 'MANAGER';
+
+
+xxi. List the emps whose names contains ‘A’. 
+Ans. SELECT * FROM emp WHERE ename LIKE '%A%'
+
+
+xxii. Find all the emps who earn the minimum Salary for each job wise in ascending 
+order. 
+Ans. SELECT * FROM emp_table_data WHERE Sal IN(SELECT MIN(Sal) FROM emp_table_data GROUP BY Job) ORDER BY Sal ASC
+
+
+xxiii. List the emps whose sal greater than Blake’s sal. 
+Ans. SELECT * FROM emp_table_data WHERE Sal > (SELECT Sal FROM emp_table_data WHERE Ename = 'BLAKE')
+
+
+xxiv. Create view v1 to select ename, job, dname, loc whose deptno are same. 
+Ans. create view myview as SELECT emp.Ename, emp.Job, emp.Deptno, dept.DeptNo,dept.LOC from emp_table_data,emp_table_data WHERE emp.Deptno = dept.DeptNo
+
+
+xxv. Create a procedure with dno as input parameter to fetch ename and dname. 
+Ans.  DELIMITER //
+	CREATE PROCEDURE selectdata(INOUT Mydeptno int)
+	BEGIN
+		SELECT emp.Ename,dept.Dname FROM emp,dept WHERE emp.Deptno = Mydeptno;
+
+	END //
+
+xxvi. Add column Pin with bigint data type in table student.
+Ans. 
+
+xxvii. Modify the student table to change the sname length from 14 to 40. Create 
+trigger to insert data in emp_log table whenever any update of sal in EMP table. 
+You can set action as ‘New Salary’.
+Ans.  DELIMITER
+	$$
+	CREATE TRIGGER before_salary_update BEFORE UPDATE ON
+	emp_table_data FOR EACH ROW
+	BEGIN
+	INSERT INTO emp_log_table
+	SET Action 	= 'New Salary',
+	New_Salary	= new.Sal,
+	Emp_id		= old.Empno;
+	END
+	$$
